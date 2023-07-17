@@ -15,4 +15,10 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate() {
         transform.position = transform.position + new Vector3(horizontalInput, 0, 0) * speed * Time.fixedDeltaTime;
     }
+
+    private void OnTriggerStay2D(Collider2D collision) {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Item") && Input.GetKeyDown(KeyCode.Q)) {
+            GameManager.FindObjectOfType<GameManager>().PickUpItem(collision.gameObject);
+        }
+    }
 }

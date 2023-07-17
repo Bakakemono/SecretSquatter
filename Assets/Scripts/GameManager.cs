@@ -6,6 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    Vector2 pickedUpItemStorageLocation = new Vector2(1000.0f, 1000.0f);
+    List<GameObject> pickUpItems = new List<GameObject>();
+
+    public void PickUpItem(GameObject item) {
+        pickUpItems.Add(item);
+        item.transform.position = pickedUpItemStorageLocation;
+    }
+
     #region Scenes
     public void LoadLevel(int levelNumber) {
         switch(levelNumber) {
