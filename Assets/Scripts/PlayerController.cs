@@ -10,6 +10,13 @@ public class PlayerController : MonoBehaviour
 
     List<GameObject> snatchableItems = new List<GameObject>();
 
+    [SerializeField] string itemLayerName = "Item";
+    int itemLayer;
+
+    private void Start() {
+        itemLayer = LayerMask.NameToLayer(itemLayerName);
+    }
+
     private void Update() {
         horizontalInput = Input.GetAxis("Horizontal");
 
@@ -32,14 +39,8 @@ public class PlayerController : MonoBehaviour
         transform.position = transform.position + new Vector3(horizontalInput, 0, 0) * speed * Time.fixedDeltaTime;
     }
 
-    private void OnTriggerStay2D(Collider2D collision) {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Item") && Input.GetKeyDown(KeyCode.Q)) {
-            FindObjectOfType<GameManager>().PickUpItem(collision.gameObject);
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D collision) {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Item")) {
+        if(collision.gameObject.layer == itemLayer) {
             collision.GetComponent<SpriteRenderer>().color = Color.red;
 
             if(!snatchableItems.Contains(collision.gameObject)) {
@@ -49,7 +50,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Item")) {
+        if(collision.gameObject.layer == itemLayer) {
             collision.GetComponent<SpriteRenderer>().color = Color.white;
 
             if(snatchableItems.Contains(collision.gameObject)) {
