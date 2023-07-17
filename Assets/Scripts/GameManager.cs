@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     #region Scenes
-    void LoadLevel(int levelNumber) {
+    public void LoadLevel(int levelNumber) {
         switch(levelNumber) {
             case 1:
             SceneManager.LoadScene("Level_01");
@@ -19,11 +19,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void LoadMainMenu() {
+    public void LoadMainMenu() {
         SceneManager.LoadScene("MainMenu");
     }
 
-    void ExitGame() {
+    public void ExitGame() {
         Application.Quit();
     }
     #endregion
