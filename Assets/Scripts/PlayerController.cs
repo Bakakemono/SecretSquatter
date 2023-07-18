@@ -13,8 +13,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] string itemLayerName = "Item";
     int itemLayer;
 
+    [SerializeField] string stairLayerName = "Stair";
+    int stairLayer;
+
+    StairsBehavior closeStair = null;
+
     private void Start() {
         itemLayer = LayerMask.NameToLayer(itemLayerName);
+        stairLayer = LayerMask.NameToLayer(stairLayerName);
     }
 
     private void Update() {
@@ -33,6 +39,10 @@ public class PlayerController : MonoBehaviour
 
             FindObjectOfType<GameManager>().PickUpItem(snatchableItems[closestItemIndex]);
         }
+
+        //if(closeStair != null && (Input.GetKeyDown()) {
+            
+        //}
     }
 
     private void FixedUpdate() {
@@ -40,12 +50,17 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
+        //Detect close item to sntach
         if(collision.gameObject.layer == itemLayer) {
             collision.GetComponent<SpriteRenderer>().color = Color.red;
 
             if(!snatchableItems.Contains(collision.gameObject)) {
                 snatchableItems.Add(collision.gameObject);
             }
+        }
+
+        if(collision.gameObject.layer == stairLayer) {
+            closeStair = collision.GetComponent<StairsBehavior>();
         }
     }
 
@@ -55,6 +70,10 @@ public class PlayerController : MonoBehaviour
 
             if(snatchableItems.Contains(collision.gameObject)) {
                 snatchableItems.Remove(collision.gameObject);
+            }
+
+            if(collision.gameObject.layer == stairLayer) {
+                closeStair = null;
             }
         }
     }
