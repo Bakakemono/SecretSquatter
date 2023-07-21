@@ -11,9 +11,6 @@ public class StairsBehavior : MonoBehaviour
         UP,
         DOWN
     }
-
-    
-
     Vector3 stairUp;
     Vector2 stairDown;
 

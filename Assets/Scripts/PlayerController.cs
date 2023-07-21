@@ -16,7 +16,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] string stairLayerName = "Stair";
     int stairLayer;
 
-    StairsBehavior closeStair = null;
+    [SerializeField] StairsBehavior closeStair = null;
+    bool switchingStairs = false;
+    bool stairCooldownOnGoing = false;
+    int stairCooldownFrameTime = 0;
+    int stairCooldownTotalTime = 2;
 
     private void Start() {
         itemLayer = LayerMask.NameToLayer(itemLayerName);
@@ -40,13 +44,38 @@ public class PlayerController : MonoBehaviour
             FindObjectOfType<GameManager>().PickUpItem(snatchableItems[closestItemIndex]);
         }
 
-        //if(closeStair != null && (Input.GetKeyDown()) {
-            
-        //}
+        if(closeStair != null && !switchingStairs) {
+            if(Input.GetKeyDown(KeyCode.W)) {
+                if(closeStair.IsFloorAvailable(StairsBehavior.Direction.UP)) {
+                    transform.position = closeStair.TakeStair(StairsBehavior.Direction.UP);
+                    switchingStairs = true;
+                    stairCooldownFrameTime = stairCooldownTotalTime;
+                    stairCooldownOnGoing = true;
+                }
+            }
+            else if(Input.GetKeyDown(KeyCode.S)) {
+                if(closeStair.IsFloorAvailable(StairsBehavior.Direction.DOWN)) {
+                    transform.position = closeStair.TakeStair(StairsBehavior.Direction.DOWN);
+                    switchingStairs = true;
+                    stairCooldownFrameTime = stairCooldownTotalTime;
+                    stairCooldownOnGoing = true;
+                }
+            }
+        }
     }
 
     private void FixedUpdate() {
         transform.position = transform.position + new Vector3(horizontalInput, 0, 0) * speed * Time.fixedDeltaTime;
+
+        if(stairCooldownOnGoing) {
+            if(stairCooldownFrameTime > 0) {
+                stairCooldownFrameTime--;
+            }
+            else {
+                switchingStairs = false;
+                stairCooldownOnGoing = false;
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
@@ -71,10 +100,10 @@ public class PlayerController : MonoBehaviour
             if(snatchableItems.Contains(collision.gameObject)) {
                 snatchableItems.Remove(collision.gameObject);
             }
+        }
 
-            if(collision.gameObject.layer == stairLayer) {
-                closeStair = null;
-            }
+        if(!switchingStairs && collision.gameObject.layer == stairLayer) {
+            closeStair = null;
         }
     }
 }
