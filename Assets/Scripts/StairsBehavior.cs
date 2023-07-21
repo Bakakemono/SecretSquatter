@@ -22,7 +22,7 @@ public class StairsBehavior : MonoBehaviour
             stairUp = stairEntranceUp.position;
         }
         if(stairEntranceDown != null) {
-            stairUp = stairEntranceDown.position;
+            stairDown = stairEntranceDown.position;
         }
     }
 
