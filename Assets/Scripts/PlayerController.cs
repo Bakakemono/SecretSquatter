@@ -26,7 +26,10 @@ public class PlayerController : MonoBehaviour
     int stairCooldownFrameTime = 0;
     int stairCooldownTotalTime = 2;
 
+    CameraBehavior cameraBehavior;
+
     private void Start() {
+        cameraBehavior = FindObjectOfType<CameraBehavior>();
         itemLayer = LayerMask.NameToLayer(itemLayerName);
         stairLayer = LayerMask.NameToLayer(stairLayerName);
     }
@@ -54,12 +57,14 @@ public class PlayerController : MonoBehaviour
                 switchingStairs = true;
                 stairCooldownOnGoing = true;
                 stairCooldownFrameTime = stairCooldownTotalTime;
+                cameraBehavior.ChangingFloor();
             }
             else if(Input.GetKeyDown(KeyCode.S) && closeStair.IsFloorAvailable(StairsBehavior.Direction.DOWN)) {
-                    transform.position = closeStair.TakeStair(StairsBehavior.Direction.DOWN);
-                    switchingStairs = true;
-                    stairCooldownOnGoing = true;
-                    stairCooldownFrameTime = stairCooldownTotalTime;
+                transform.position = closeStair.TakeStair(StairsBehavior.Direction.DOWN);
+                switchingStairs = true;
+                stairCooldownOnGoing = true;
+                stairCooldownFrameTime = stairCooldownTotalTime;
+                cameraBehavior.ChangingFloor();
             }
         }
     }
