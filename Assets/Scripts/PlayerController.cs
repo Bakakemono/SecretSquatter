@@ -8,11 +8,15 @@ public class PlayerController : MonoBehaviour
     float horizontalInput = 0;
     float speed = 5.0f;
 
-    List<GameObject> snatchableItems = new List<GameObject>();
-
+    //Stairs Prama
     [SerializeField] string itemLayerName = "Item";
     int itemLayer;
 
+    Vector2 pickedUpItemStorageLocation = new Vector2(1000.0f, 1000.0f);
+    List<GameObject> snatchableItems = new List<GameObject>();
+    List<GameObject> pickedUpItems = new List<GameObject>();
+
+    //Stairs Params
     [SerializeField] string stairLayerName = "Stair";
     int stairLayer;
 
@@ -41,25 +45,21 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            FindObjectOfType<GameManager>().PickUpItem(snatchableItems[closestItemIndex]);
+            PickUpItem(snatchableItems[closestItemIndex]);
         }
 
         if(closeStair != null && !switchingStairs) {
-            if(Input.GetKeyDown(KeyCode.W)) {
-                if(closeStair.IsFloorAvailable(StairsBehavior.Direction.UP)) {
-                    transform.position = closeStair.TakeStair(StairsBehavior.Direction.UP);
-                    switchingStairs = true;
-                    stairCooldownFrameTime = stairCooldownTotalTime;
-                    stairCooldownOnGoing = true;
-                }
+            if(Input.GetKeyDown(KeyCode.W) && closeStair.IsFloorAvailable(StairsBehavior.Direction.UP)) {
+                transform.position = closeStair.TakeStair(StairsBehavior.Direction.UP);
+                switchingStairs = true;
+                stairCooldownOnGoing = true;
+                stairCooldownFrameTime = stairCooldownTotalTime;
             }
-            else if(Input.GetKeyDown(KeyCode.S)) {
-                if(closeStair.IsFloorAvailable(StairsBehavior.Direction.DOWN)) {
+            else if(Input.GetKeyDown(KeyCode.S) && closeStair.IsFloorAvailable(StairsBehavior.Direction.DOWN)) {
                     transform.position = closeStair.TakeStair(StairsBehavior.Direction.DOWN);
                     switchingStairs = true;
-                    stairCooldownFrameTime = stairCooldownTotalTime;
                     stairCooldownOnGoing = true;
-                }
+                    stairCooldownFrameTime = stairCooldownTotalTime;
             }
         }
     }
@@ -76,6 +76,11 @@ public class PlayerController : MonoBehaviour
                 stairCooldownOnGoing = false;
             }
         }
+    }
+
+    void PickUpItem(GameObject item) {
+        pickedUpItems.Add(item);
+        item.transform.position = pickedUpItemStorageLocation;
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
